@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1F2420">
+  <meta name="description" content="Live adaptive AI technical interview workspace.">
+  <title>Interview Agent — Live Assessment</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="brand-block"><a href="/" class="brand-mark" aria-label="Back to Interview Agent home">IA</a><div><div class="eyebrow">AI ASSESSMENT PLATFORM</div><h1>Interview Agent</h1></div></div>
+      <div class="header-actions"><span class="session-badge" id="status">Ready</span><span class="ai-status" id="aiStatus">Checking AI...</span></div>
+    </header>
+    <main class="workspace">
+      <section class="hero" id="setup">
+        <div class="hero-copy"><span class="eyebrow">LIVE TECHNICAL ASSESSMENT</span><h2>Show what you know under pressure.</h2><p>The interviewer adapts to your answers, moves from fundamentals into engineering judgment, and finishes with an evidence-based readiness report.</p></div>
+        <div class="setup-card"><label for="candidateSelect">Candidate profile</label><select id="candidateSelect"></select><div class="setup-meta"><span>20 min</span><span>•</span><span>31-day curriculum</span><span>•</span><span>Adaptive AI</span></div><button id="startBtn" class="primary-btn" type="button"><span>Begin assessment</span><span>→</span></button></div>
+      </section>
+      <section class="interview-layout">
+        <aside class="session-rail" aria-label="Interview progress">
+          <div class="rail-card timer-card"><div class="rail-label">TIME REMAINING</div><div class="timer" id="timer">20:00</div><div class="timer-track"><div id="timerProgress"></div></div><div class="timer-state" id="timerState">Ready when you are</div></div>
+          <div class="rail-card"><div class="rail-label">SESSION</div><div class="rail-stat"><strong id="questionCount">0</strong><span>questions</span></div><div class="rail-stat"><strong id="coveredCount">0/31</strong><span>curriculum</span></div></div>
+          <div class="rail-card"><div class="rail-label">CURRENT LEVEL</div><div class="difficulty-badge foundation" id="difficulty">FOUNDATION</div><p id="difficultyHint">The interview starts with baseline understanding.</p></div>
+        </aside>
+        <section class="interview-panel">
+          <div class="interview-toolbar"><div><div class="rail-label">LIVE INTERVIEW</div><div class="coverage-line"><div class="progress-wrap"><div class="progress" id="progress"></div></div><span id="coverageText">0 / 31 days</span></div></div><div class="live-dot"><span></span> LIVE</div></div>
+          <section class="chat" id="chat" aria-live="polite"></section>
+          <form class="composer" id="composer"><div class="composer-top"><span>YOUR RESPONSE</span><span id="responseTimer">01:30</span></div><textarea id="messageInput" rows="5" autocomplete="off" placeholder="Explain your reasoning, implementation choices, trade-offs, and evidence..."></textarea><div class="composer-bottom"><span>Specific evidence beats a long answer.</span><button class="primary-btn" type="submit">Submit answer <span>↵</span></button></div></form>
+          <div class="retry-wrap"><button id="retryBtn" class="retry hidden" type="button">Retry last request</button></div>
+        </section>
+      </section>
+      <section class="feedback hidden" id="feedback"></section>
+    </main>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>
