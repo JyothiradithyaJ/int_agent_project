@@ -1,0 +1,16 @@
+{
+  "name": "interview-agent",
+  "version": "1.0.0",
+  "description": "Groq-powered AI Interview Agent backend and chat UI",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test:planner": "node scripts/check-planner.js",
+    "test:simulate": "node scripts/simulate-interview.js",
+    "test": "npm run test:planner && npm run test:simulate"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

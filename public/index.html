@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Interview Agent</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="panel">
+        <header class="topbar">
+          <div>
+            <h1>Interview Agent</h1>
+            <p>Personalized technical interview for AI Cohort graduates</p>
+          </div>
+          <div class="status" id="status">Ready</div>
+        </header>
+
+        <div class="progress-wrap" aria-label="Curriculum day coverage">
+          <div class="progress" id="progress"></div>
+        </div>
+
+        <section class="setup" id="setup">
+          <label for="candidateSelect">Candidate profile</label>
+          <select id="candidateSelect"></select>
+          <button id="startBtn" type="button">Start Interview</button>
+        </section>
+
+        <section class="chat" id="chat" aria-live="polite"></section>
+
+        <form class="composer" id="composer">
+          <input id="messageInput" autocomplete="off" placeholder="Answer the interviewer..." />
+          <button type="submit">Send</button>
+        </form>
+
+        <section class="feedback hidden" id="feedback"></section>
+      </section>
+    </main>
+    <script src="/app.js"></script>
+  </body>
+</html>
