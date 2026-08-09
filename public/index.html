@@ -14,12 +14,16 @@
             <h1>Interview Agent</h1>
             <p>Personalized technical interview for AI Cohort graduates</p>
           </div>
-          <div class="status" id="status">Ready</div>
+          <div class="header-status">
+            <div class="status" id="status">Ready</div>
+            <div class="ai-status" id="aiStatus">Checking AI...</div>
+          </div>
         </header>
 
         <div class="progress-wrap" aria-label="Curriculum day coverage">
           <div class="progress" id="progress"></div>
         </div>
+        <div class="coverage" id="coverageText">0 / 31 curriculum days covered</div>
 
         <section class="setup" id="setup">
           <label for="candidateSelect">Candidate profile</label>
@@ -33,6 +37,10 @@
           <input id="messageInput" autocomplete="off" placeholder="Answer the interviewer..." />
           <button type="submit">Send</button>
         </form>
+
+        <div class="retry-wrap">
+          <button id="retryBtn" class="retry hidden" type="button">Retry last request</button>
+        </div>
 
         <section class="feedback hidden" id="feedback"></section>
       </section>
