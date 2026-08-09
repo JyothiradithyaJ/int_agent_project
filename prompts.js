@@ -21,17 +21,13 @@ function candidateContextLine(candidate) {
     signals.missionsCompleted
       ? `Completed ${signals.missionsCompleted} missions over ${signals.commitDays} active days; ${firstTryRate}% first-try pass rate.`
       : "",
-  ]
-    .filter(Boolean)
-    .join(" ");
+  ].filter(Boolean).join(" ");
 }
 
 function buildTurnPrompt({ candidate, plan, currentTopicIndex, phase, history, followUpsOnCurrent }) {
   const topic = currentPlanItem(plan, currentTopicIndex);
   const remainingTopics = plan.slice(currentTopicIndex + 1).map((item) => `Day ${item.day}: ${item.topic}`);
-  const transcript = history
-    .map((item) => `${item.role === "interviewer" ? "Interviewer" : "Candidate"}: ${item.text}`)
-    .join("\n");
+  const transcript = history.map((item) => `${item.role === "interviewer" ? "Interviewer" : "Candidate"}: ${item.text}`).join("\n");
 
   return `You are conducting a live technical interview for "The AI Cohort", a 31-day applied AI engineering program covering RAG, vector databases, prompting, agents, MCP, deployment, and production AI systems.
 
@@ -57,9 +53,10 @@ ${transcript || "(empty)"}
 
 ADAPTIVE DIFFICULTY
 Classify the latest candidate answer as one of:
-- WEAK: incorrect, very vague, definition-only, or unable to explain implementation. Ask a simpler diagnostic follow-up.
-- PARTIAL: concept is mostly understood but implementation detail, evidence, or trade-off is missing. Ask one targeted clarification.
-- STRONG: correct, specific, reasoned, and demonstrates trade-offs. Increase difficulty with a production or architecture question, or advance when the topic is sufficiently demonstrated.
+- FOUNDATION: incorrect, very vague, definition-only, or unable to explain implementation. Ask a simpler diagnostic follow-up.
+- INTERMEDIATE: concept is mostly understood but implementation detail, evidence, or trade-off is missing. Ask one targeted clarification.
+- ADVANCED: correct, specific, reasoned, and demonstrates trade-offs. Increase difficulty with a production or architecture question.
+- PRODUCTION: the candidate demonstrates strong architecture reasoning. Test scalability, latency, cost, observability, security, evaluation, reliability, or failure recovery.
 
 INTERVIEW RULES
 - Do not repeat a question already answered.
@@ -67,7 +64,7 @@ INTERVIEW RULES
 - Never ask more than 2 follow-ups on the same topic.
 - Failed topics require stronger verification before advancing.
 - Skipped topics should start with baseline understanding before deeper questions.
-- Mastered topics should focus on trade-offs, scalability, latency, cost, observability, security, evaluation, reliability, or failure recovery when appropriate.
+- Mastered topics should focus on production trade-offs.
 - For SHIP_IT or CAPSTONE topics, test system integration and production decisions.
 - If phase is wrapup, close naturally.
 
@@ -77,17 +74,14 @@ Return ONLY this JSON object:
   "action": "follow_up" | "advance_topic" | "wrap_up",
   "day_covered": ${topic.day},
   "quality_signal": "strong" | "partial" | "weak",
+  "difficulty": "foundation" | "intermediate" | "advanced" | "production",
   "done": false
 }`;
 }
 
 function buildFeedbackPrompt({ candidate, plan, history }) {
-  const transcript = history
-    .map((item) => `${item.role === "interviewer" ? "Interviewer" : "Candidate"}: ${item.text}`)
-    .join("\n");
-  const plannedTopics = plan
-    .map((item) => `Day ${item.day} (${item.topic}, ${item.type}) - ${item.reason}`)
-    .join("\n");
+  const transcript = history.map((item) => `${item.role === "interviewer" ? "Interviewer" : "Candidate"}: ${item.text}`).join("\n");
+  const plannedTopics = plan.map((item) => `Day ${item.day} (${item.topic}, ${item.type}) - ${item.reason}`).join("\n");
 
   return `Produce evidence-based feedback for ${candidate.member?.name || "the candidate"} after this technical interview.
 
@@ -111,9 +105,17 @@ Score each category from 0 to 100:
 
 For evidence, cite the specific topic and what the candidate actually demonstrated. Keep feedback concrete and actionable.
 
+Also calculate a concise hiring-style recommendation:
+- STRONG HIRE: consistently strong evidence across technical and engineering dimensions
+- HIRE: solid evidence with manageable gaps
+- BORDERLINE: mixed evidence; significant gaps remain
+- NO HIRE: insufficient or consistently weak evidence
+
 Return ONLY this JSON object:
 {
   "summary": "<2-3 sentence overall assessment>",
+  "recommendation": "STRONG HIRE" | "HIRE" | "BORDERLINE" | "NO HIRE",
+  "confidence": "high" | "medium" | "low",
   "strengths": ["<specific strength tied to evidence>", "..."],
   "gaps": ["<specific gap or weak explanation>", "..."],
   "next": ["<specific study or practice step tied to a curriculum day>", "..."],
