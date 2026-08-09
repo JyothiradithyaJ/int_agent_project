@@ -1,28 +1,21 @@
 const fs = require("fs");
 const path = require("path");
 
-function loadEnvFile() {
-  const envPath = path.join(__dirname, "..", ".env");
-  if (!fs.existsSync(envPath)) return;
-  for (const line of fs.readFileSync(envPath, "utf8").split(/\r?\n/)) {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith("#")) continue;
-    const index = trimmed.indexOf("=");
-    if (index === -1) continue;
-    const key = trimmed.slice(0, index).trim();
-    const value = trimmed.slice(index + 1).trim().replace(/^["']|["']$/g, "");
-    if (key && process.env[key] === undefined) process.env[key] = value;
-  }
-}
-
 loadEnvFile();
 
-const apiKey = String(process.env.GROQ_API_KEY || "").trim().replace(/^Bearer\s+/i, "");
+const apiKey = String(process.env.GROQ_API_KEY || "")
+  .trim()
+  .replace(/^Bearer\s+/i, "")
+  .replace(/^["']|["']$/g, "");
 const model = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
 const timeoutMs = Number(process.env.GROQ_TIMEOUT_MS || 20000);
 
-if (!apiKey) {
-  console.error("❌ GROQ_API_KEY is missing");
+if (!apiKey || apiKey === "your-groq-api-key") {
+  console.error("❌ GROQ_API_KEY is missing.");
+  console.error("Expected a real key in .env at the project root:");
+  console.error(path.join(process.cwd(), ".env"));
+  console.error("Make sure the file is named exactly .env, not .env.txt, and contains:");
+  console.error("GROQ_API_KEY=gsk_...");
   process.exit(1);
 }
 
@@ -79,6 +72,33 @@ async function main() {
   } finally {
     clearTimeout(timeout);
   }
+}
+
+function loadEnvFile() {
+  // npm runs scripts with the project root as cwd, but also support direct
+  // execution from any working directory.
+  const candidates = [
+    path.join(process.cwd(), ".env"),
+    path.join(__dirname, "..", ".env"),
+  ];
+
+  const envPath = candidates.find((file) => fs.existsSync(file));
+  if (!envPath) {
+    console.error(`⚠️ No .env file found. Checked: ${candidates.join(", ")}`);
+    return;
+  }
+
+  for (const line of fs.readFileSync(envPath, "utf8").split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) continue;
+    const index = trimmed.indexOf("=");
+    if (index === -1) continue;
+    const key = trimmed.slice(0, index).trim();
+    const value = trimmed.slice(index + 1).trim().replace(/^["']|["']$/g, "");
+    if (key && process.env[key] === undefined) process.env[key] = value;
+  }
+
+  console.log(`Loaded .env from ${envPath}`);
 }
 
 main();
