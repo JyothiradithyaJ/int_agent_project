@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: interview-agent
+    runtime: node
+    branch: fix/groq-agent-improvements
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_MODEL
+        value: llama-3.3-70b-versatile
+      - key: USE_MOCK_LLM
+        value: "0"
+      - key: GROQ_TIMEOUT_MS
+        value: "20000"

@@ -27,19 +27,22 @@ async function main() {
     });
     assertShape(payload);
 
-    const days = new Set(readDays(payload.reply));
+    const days = new Set(Array.isArray(payload.coverage) ? payload.coverage : []);
+    if (Number.isInteger(payload.day_covered)) days.add(payload.day_covered);
+
     for (const message of answers) {
       payload = await post("/api/interview", { sessionId: "sim-1", message });
       assertShape(payload);
-      readDays(payload.reply).forEach((day) => days.add(day));
+      if (Array.isArray(payload.coverage)) payload.coverage.forEach((day) => days.add(day));
+      if (Number.isInteger(payload.day_covered)) days.add(payload.day_covered);
       if (payload.done) break;
     }
 
     if (!payload.done) throw new Error("Simulation did not finish.");
     if (!payload.feedback) throw new Error("Final response is missing feedback.");
-    if (days.size < 4) throw new Error(`Simulation referenced only ${days.size} days.`);
+    if (days.size < 4) throw new Error(`Simulation covered only ${days.size} days.`);
 
-    console.log(`Simulation passed. Referenced ${days.size} days. Final feedback keys: ${Object.keys(payload.feedback).join(", ")}`);
+    console.log(`Simulation passed. Covered ${days.size} days. Final feedback keys: ${Object.keys(payload.feedback).join(", ")}`);
   } finally {
     server.close();
   }
@@ -57,18 +60,21 @@ async function post(path, body) {
 }
 
 function assertShape(payload) {
-  const keys = Object.keys(payload).sort();
-  const allowed = payload.done ? ["done", "feedback", "reply"] : ["done", "reply"];
-  if (keys.join(",") !== allowed.sort().join(",")) {
-    throw new Error(`Bad response shape: ${keys.join(",")}`);
+  const required = ["coverage", "done", "reply"];
+  const missing = required.filter((key) => !(key in payload));
+  if (missing.length) {
+    throw new Error(`Bad response shape: missing ${missing.join(",")}`);
   }
+  if (!Array.isArray(payload.coverage)) throw new Error("Bad coverage type.");
   if (typeof payload.reply !== "string" || typeof payload.done !== "boolean") {
     throw new Error("Bad reply/done types.");
   }
-}
-
-function readDays(text) {
-  return [...String(text).matchAll(/Day\s+(\d+)/gi)].map((match) => Number(match[1]));
+  if (!payload.done && !("day_covered" in payload)) {
+    throw new Error("Non-final response is missing day_covered.");
+  }
+  if (payload.done && (!payload.feedback || typeof payload.feedback !== "object")) {
+    throw new Error("Final response is missing feedback.");
+  }
 }
 
 main().catch((err) => {
