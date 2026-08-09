@@ -1,92 +1,154 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#0b1220" />
-    <meta name="description" content="Adaptive AI technical interview platform" />
-    <title>Interview Agent · AI Technical Assessment</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="/styles.css" />
-  </head>
-  <body>
-    <div class="app-shell">
-      <header class="app-header">
-        <div class="brand-block">
-          <div class="brand-mark">IA</div>
-          <div>
-            <div class="eyebrow">AI ASSESSMENT PLATFORM</div>
-            <h1>Interview Agent</h1>
-          </div>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f4ee">
+  <meta name="description" content="A realistic AI technical interview practice platform that adapts to what you studied and produces an evidence-based readiness report.">
+  <title>Interview Agent — Practice like the real thing</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            paper: '#F7F4EE',
+            ink: '#1F2420',
+            sage: '#DCE4D9',
+            amber: '#E8863A',
+            muted: '#6D716B'
+          },
+          boxShadow: {
+            soft: '0 20px 60px rgba(31,36,32,.10)',
+            card: '0 12px 32px rgba(31,36,32,.08)'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root { color-scheme: light; }
+    html { scroll-behavior: smooth; }
+    body { background:#F7F4EE; color:#1F2420; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .serif { font-family: Georgia, "Times New Roman", serif; }
+    .noise { background-image: radial-gradient(rgba(31,36,32,.035) .7px, transparent .7px); background-size: 12px 12px; }
+    .blob { filter: blur(2px); border-radius: 999px; }
+    .fade-up { animation: fadeUp .7s ease both; }
+    .fade-up-delay { animation: fadeUp .7s .12s ease both; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:none; } }
+    .gauge { background: conic-gradient(#E8863A 0 74%, #d8ddd4 74% 100%); }
+    .chat-scrollbar::-webkit-scrollbar { width: 5px; }
+    .chat-scrollbar::-webkit-scrollbar-thumb { background:#c8cec4; border-radius:999px; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation:none !important; scroll-behavior:auto !important; } }
+  </style>
+</head>
+<body class="overflow-x-hidden">
+  <header class="sticky top-0 z-50 border-b border-ink/10 bg-paper/90 backdrop-blur-xl">
+    <nav class="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:px-8 lg:px-10" aria-label="Primary navigation">
+      <a href="#home" class="flex items-center gap-3 font-semibold tracking-tight" aria-label="Interview Agent home">
+        <span class="grid h-9 w-9 place-items-center rounded-xl bg-ink text-sm font-bold text-paper">IA</span>
+        <span class="text-lg">Interview Agent</span>
+      </a>
+      <div class="hidden items-center gap-8 text-sm text-ink/70 md:flex">
+        <a class="transition hover:text-ink" href="#home">Home</a>
+        <a class="transition hover:text-ink" href="#how-it-works">How It Works</a>
+        <a class="transition hover:text-ink" href="#question-bank">Question Bank</a>
+        <a class="transition hover:text-ink" href="#pricing">Pricing</a>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="/interview.html" class="hidden px-2 py-2 text-sm font-medium text-ink/70 transition hover:text-ink sm:inline">Log In</a>
+        <a href="/interview.html" class="rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-paper transition hover:-translate-y-0.5 hover:bg-ink/90 focus:outline-none focus:ring-2 focus:ring-amber focus:ring-offset-2 focus:ring-offset-paper">Get Started</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="home">
+    <section class="relative overflow-hidden px-5 pb-20 pt-20 sm:px-8 sm:pt-28 lg:px-10 lg:pb-28">
+      <div class="blob absolute -left-24 top-16 h-72 w-72 bg-[#e8d7bb]/55"></div>
+      <div class="blob absolute -right-20 top-28 h-80 w-80 bg-[#cbd8c7]/60"></div>
+      <div class="noise pointer-events-none absolute inset-0 opacity-50"></div>
+      <div class="relative mx-auto max-w-6xl text-center">
+        <div class="fade-up mx-auto mb-7 inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white/55 px-4 py-2 text-xs font-semibold text-ink/70 shadow-sm backdrop-blur">
+          <span class="h-2 w-2 rounded-full bg-amber"></span> Adaptive AI technical interviews
         </div>
-        <div class="header-actions">
-          <span class="session-badge" id="status">Ready</span>
-          <span class="ai-status" id="aiStatus">Checking AI...</span>
+        <h1 class="serif fade-up mx-auto max-w-5xl text-5xl leading-[.98] tracking-[-.035em] sm:text-6xl lg:text-8xl">Walk into your next interview<br><span class="text-ink/55">already having done it.</span></h1>
+        <p class="fade-up-delay mx-auto mt-7 max-w-2xl text-base leading-7 text-ink/60 sm:text-lg">Practice realistic technical interviews built around what you actually studied — then see exactly where you're ready and where to improve.</p>
+        <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <a href="/interview.html" class="rounded-full bg-amber px-7 py-3.5 text-sm font-bold text-white shadow-[0_10px_24px_rgba(232,134,58,.22)] transition hover:-translate-y-0.5 hover:bg-[#d9782e] focus:outline-none focus:ring-2 focus:ring-amber focus:ring-offset-2 focus:ring-offset-paper">Start a Mock Interview <span aria-hidden="true">→</span></a>
+          <a href="#how-it-works" class="rounded-full px-6 py-3.5 text-sm font-semibold text-ink/70 transition hover:bg-white/60 hover:text-ink">See how it works</a>
         </div>
-      </header>
 
-      <main class="workspace">
-        <section class="hero" id="setup">
-          <div class="hero-copy">
-            <span class="eyebrow">ADAPTIVE TECHNICAL INTERVIEW</span>
-            <h2>Measure engineering judgment, not memorization.</h2>
-            <p>The interviewer adapts difficulty from your answers and evaluates technical depth, problem solving, production readiness, and communication.</p>
+        <div class="relative mx-auto mt-16 max-w-5xl rounded-[28px] bg-sage p-3 shadow-soft sm:p-5 lg:p-7">
+          <div class="absolute -left-3 top-10 z-20 w-44 rounded-2xl bg-white p-4 text-left shadow-card sm:-left-8 sm:w-48">
+            <div class="mb-2 grid h-11 w-11 place-items-center rounded-full bg-ink text-xs font-bold text-paper">87%</div>
+            <p class="text-xs font-semibold text-ink">Readiness Score</p>
+            <p class="mt-1 text-[11px] leading-4 text-ink/50">Based on demonstrated evidence</p>
           </div>
-          <div class="setup-card">
-            <label for="candidateSelect">Candidate profile</label>
-            <select id="candidateSelect"></select>
-            <div class="setup-meta">
-              <span>31-day curriculum</span><span>•</span><span>Adaptive questioning</span><span>•</span><span>Evidence-based score</span>
+          <div class="absolute -right-3 bottom-10 z-20 w-56 rounded-2xl bg-white p-4 text-left shadow-card sm:-right-8 sm:w-64">
+            <p class="text-[11px] font-semibold text-ink/50">TOPICS COVERED</p>
+            <div class="mt-2 flex flex-wrap gap-1.5">
+              <span class="rounded-full bg-[#eef1eb] px-2 py-1 text-[10px] font-medium">RAG</span><span class="rounded-full bg-[#eef1eb] px-2 py-1 text-[10px] font-medium">Vector DBs</span><span class="rounded-full bg-[#eef1eb] px-2 py-1 text-[10px] font-medium">Prompting</span><span class="rounded-full bg-[#f4e6d9] px-2 py-1 text-[10px] font-medium">+2</span>
             </div>
-            <button id="startBtn" class="primary-btn" type="button"><span>Start assessment</span><span>→</span></button>
           </div>
-        </section>
-
-        <section class="interview-layout">
-          <aside class="session-rail" aria-label="Interview progress">
-            <div class="rail-card timer-card">
-              <div class="rail-label">TIME REMAINING</div>
-              <div class="timer" id="timer">20:00</div>
-              <div class="timer-track"><div id="timerProgress"></div></div>
-              <div class="timer-state" id="timerState">Ready when you are</div>
+          <div class="rounded-[21px] bg-[#fdfcf9] p-3 text-left shadow-sm sm:p-5">
+            <div class="flex items-center justify-between border-b border-ink/10 pb-4">
+              <div class="flex items-center gap-3"><div class="grid h-9 w-9 place-items-center rounded-xl bg-ink text-xs font-bold text-paper">IA</div><div><p class="text-sm font-semibold">Live technical interview</p><p class="text-[11px] text-ink/45">AI interviewer · Advanced</p></div></div>
+              <div class="rounded-full bg-[#e9eee7] px-3 py-1.5 text-[10px] font-bold text-ink/65"><span class="mr-1 inline-block h-1.5 w-1.5 rounded-full bg-[#5f8c68]"></span> LIVE</div>
             </div>
-            <div class="rail-card">
-              <div class="rail-label">SESSION</div>
-              <div class="rail-stat"><strong id="questionCount">0</strong><span>questions</span></div>
-              <div class="rail-stat"><strong id="coveredCount">0/31</strong><span>curriculum</span></div>
+            <div class="chat-scrollbar h-[310px] space-y-4 overflow-y-auto px-1 py-5 sm:h-[350px] sm:px-6 sm:py-7">
+              <div class="max-w-[78%] rounded-2xl rounded-tl-md bg-[#eef1eb] p-4"><p class="mb-1 text-[10px] font-bold text-ink/45">INTERVIEWER</p><p class="text-sm leading-6 text-ink/80">You have a retrieval pipeline in production. What would you monitor to know whether answer quality is actually improving?</p></div>
+              <div class="ml-auto max-w-[78%] rounded-2xl rounded-tr-md bg-ink p-4 text-paper"><p class="mb-1 text-[10px] font-bold text-paper/50">CANDIDATE</p><p class="text-sm leading-6 text-paper/85">I'd track retrieval relevance and groundedness separately from latency and cost. Offline evals can catch regressions, while user feedback tells us where the system fails in real usage.</p></div>
+              <div class="max-w-[78%] rounded-2xl rounded-tl-md bg-[#eef1eb] p-4"><p class="mb-1 text-[10px] font-bold text-ink/45">INTERVIEWER · FOLLOW-UP</p><p class="text-sm leading-6 text-ink/80">Good. Now make the evaluation measurable. Which signals would you put on a weekly production dashboard?</p></div>
             </div>
-            <div class="rail-card">
-              <div class="rail-label">CURRENT LEVEL</div>
-              <div class="difficulty-badge foundation" id="difficulty">FOUNDATION</div>
-              <p id="difficultyHint">The interview starts with baseline understanding.</p>
-            </div>
-          </aside>
+            <div class="rounded-2xl border border-ink/10 bg-paper p-3 sm:p-4"><div class="mb-2 flex items-center justify-between text-[10px] font-semibold text-ink/45"><span>YOUR RESPONSE</span><span>01:12</span></div><div class="rounded-xl bg-white px-3 py-3 text-sm text-ink/35">Explain your reasoning, trade-offs, and evidence...</div></div>
+          </div>
+          <div class="absolute bottom-3 left-1/2 hidden -translate-x-1/2 translate-y-1/2 rounded-full border border-ink/10 bg-white px-5 py-2.5 text-xs font-medium text-ink/55 shadow-card sm:block">⌕ &nbsp; Ask your AI coach anything…</div>
+        </div>
+        <div class="mt-12 flex flex-wrap justify-center gap-2 text-xs font-medium text-ink/45"><span class="rounded-full border border-ink/10 px-3 py-1.5">20-minute assessment</span><span class="rounded-full border border-ink/10 px-3 py-1.5">31-day curriculum</span><span class="rounded-full border border-ink/10 px-3 py-1.5">Evidence-based report</span></div>
+      </div>
+    </section>
 
-          <section class="interview-panel">
-            <div class="interview-toolbar">
-              <div>
-                <div class="rail-label">LIVE INTERVIEW</div>
-                <div class="coverage-line"><div class="progress-wrap"><div class="progress" id="progress"></div></div><span id="coverageText">0 / 31 days</span></div>
-              </div>
-              <div class="live-dot"><span></span> LIVE</div>
-            </div>
+    <section id="how-it-works" class="border-y border-ink/10 bg-[#f2efe8] px-5 py-20 sm:px-8 lg:px-10 lg:py-28">
+      <div class="mx-auto max-w-7xl">
+        <div class="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div><p class="text-xs font-bold tracking-[.18em] text-amber">BUILT AROUND YOUR LEARNING</p><h2 class="serif mt-3 text-4xl tracking-tight sm:text-5xl">Less generic practice.<br>More useful signal.</h2></div><p class="max-w-md text-sm leading-6 text-ink/55">Every session uses your learning history and the evidence you provide to decide what to ask next.</p></div>
+        <div class="grid gap-5 md:grid-cols-2">
+          <article class="relative min-h-[330px] overflow-hidden rounded-2xl bg-[#d9ded5] p-6 shadow-card"><div class="absolute -right-10 -top-12 h-52 w-52 rounded-full bg-[#c0cbbd]"></div><div class="absolute bottom-8 right-10 h-24 w-24 rotate-12 rounded-[30%] bg-[#e9ece5]/80"></div><div class="absolute bottom-5 left-5 max-w-sm rounded-2xl bg-white/95 p-5 shadow-card backdrop-blur"><span class="rounded-full bg-[#eef1eb] px-2.5 py-1 text-[10px] font-bold text-ink/55">01 · ADAPTIVE</span><h3 class="serif mt-3 text-2xl">Adapts to what you actually studied</h3><p class="mt-2 text-sm leading-5 text-ink/55">Your cohort progress, attempts, and mastered topics shape the interview — not a random list of trivia.</p></div></article>
+          <article class="relative min-h-[330px] overflow-hidden rounded-2xl bg-[#e4d9c9] p-6 shadow-card"><div class="absolute right-10 top-8 h-36 w-36 rounded-full border-[22px] border-[#d1bda1]/70"></div><div class="absolute left-7 top-7 rounded-full bg-white/50 px-3 py-1 text-[10px] font-bold text-ink/45">LIVE FLOW</div><div class="absolute bottom-5 left-5 right-5 rounded-2xl bg-white/95 p-5 shadow-card"><h3 class="serif text-2xl">Guided interview flow</h3><div class="mt-4 grid grid-cols-3 gap-2 text-[10px] font-semibold"><div class="rounded-xl bg-[#e9eee7] p-3 text-center text-ink/65">✓<br>Warm-up</div><div class="rounded-xl bg-[#e9eee7] p-3 text-center text-ink/65">✓<br>Technical deep dive</div><div class="rounded-xl bg-[#f5e5d8] p-3 text-center text-amber">03<br>Feedback</div></div></div></article>
+          <article class="relative min-h-[330px] overflow-hidden rounded-2xl bg-[#d9d2cb] p-6 shadow-card"><div class="absolute left-1/2 top-8 h-48 w-48 -translate-x-1/2 rounded-full bg-[#c7c0b8]/60"></div><div class="absolute bottom-5 left-5 max-w-sm rounded-2xl bg-white/95 p-5 shadow-card"><span class="text-[10px] font-bold text-amber">READINESS</span><div class="mt-2 flex items-center gap-5"><div class="gauge grid h-20 w-20 place-items-center rounded-full"><div class="grid h-14 w-14 place-items-center rounded-full bg-white"><strong class="text-xl">74%</strong></div></div><div><h3 class="serif text-2xl">Almost there.</h3><p class="mt-1 text-xs text-ink/50">See what to strengthen next.</p></div></div></div></article>
+          <article id="question-bank" class="relative min-h-[330px] overflow-hidden rounded-2xl bg-[#dce2d9] p-6 shadow-card"><div class="absolute -left-8 top-5 h-40 w-40 rounded-full bg-[#c7d2c5]"></div><div class="absolute bottom-5 left-5 right-5 rounded-2xl bg-white/95 p-5 shadow-card"><h3 class="serif text-2xl">Practice for any role</h3><div class="mt-4 rounded-xl border border-ink/10 bg-paper p-3"><p class="text-[10px] font-bold text-ink/40">ROLE OR CURRICULUM</p><p class="mt-1 truncate text-sm text-ink/70">ML Engineer · RAG · Evaluation · Agents</p><div class="mt-3 flex items-center gap-2 text-xs font-semibold text-[#55745d]"><span class="grid h-5 w-5 place-items-center rounded-full bg-[#e2eee3]">✓</span> Ready to build your interview</div></div></div></article>
+        </div>
+      </div>
+    </section>
 
-            <section class="chat" id="chat" aria-live="polite"></section>
+    <section class="bg-ink px-5 py-24 text-paper sm:px-8 lg:px-10 lg:py-32">
+      <div class="mx-auto max-w-7xl">
+        <div class="mx-auto max-w-3xl text-center"><p class="text-xs font-bold tracking-[.18em] text-[#e9a066]">WHY PRACTICE WITH INTERVIEW AGENT</p><h2 class="serif mt-4 text-4xl leading-tight tracking-tight sm:text-6xl">Build confidence from evidence, not guesswork.</h2><p class="mx-auto mt-5 max-w-xl text-sm leading-6 text-paper/60">Know what you can explain under pressure, which topics need another pass, and how close you are to interview-ready.</p><a href="/interview.html" class="mt-8 inline-flex rounded-full bg-amber px-7 py-3.5 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-[#d9782e]">Start a Mock Interview →</a></div>
+        <div class="my-20 grid divide-y divide-paper/10 border-y border-paper/10 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+          <div class="px-6 py-8 text-center sm:py-10"><div class="serif text-4xl">Since 2026</div><p class="mt-2 text-xs text-paper/45">Built for focused technical practice</p></div>
+          <div class="px-6 py-8 text-center sm:py-10"><div class="serif text-4xl">1,000+</div><p class="mt-2 text-xs text-paper/45">practice questions in the curriculum</p></div>
+          <div class="px-6 py-8 text-center sm:py-10"><div class="serif text-4xl">31 days</div><p class="mt-2 text-xs text-paper/45">of applied AI engineering topics</p></div>
+        </div>
+        <div class="grid gap-4 md:grid-cols-3">
+          <div class="relative aspect-[4/3] overflow-hidden rounded-2xl bg-[#3c443d] p-6"><div class="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-[#5d6a5d]"></div><div class="absolute bottom-5 left-5 rounded-full bg-paper px-3 py-1.5 text-[10px] font-bold text-ink">Adaptive Questions ✓</div></div>
+          <div class="relative aspect-[4/3] overflow-hidden rounded-2xl bg-[#4a4138] p-6"><div class="absolute left-10 top-10 h-32 w-32 rotate-12 rounded-[40%] bg-[#766653]"></div><div class="absolute bottom-5 left-5 rounded-full bg-paper px-3 py-1.5 text-[10px] font-bold text-ink">Real Curriculum Match ✓</div></div>
+          <div class="relative aspect-[4/3] overflow-hidden rounded-2xl bg-[#3d4641] p-6"><div class="absolute right-8 top-8 h-28 w-28 rounded-full border-[18px] border-[#69766d]"></div><div class="absolute bottom-5 left-5 rounded-full bg-paper px-3 py-1.5 text-[10px] font-bold text-ink">Instant Feedback ✓</div></div>
+        </div>
+      </div>
+    </section>
 
-            <form class="composer" id="composer">
-              <div class="composer-top"><span>YOUR RESPONSE</span><span id="responseTimer">01:30</span></div>
-              <textarea id="messageInput" rows="4" autocomplete="off" placeholder="Explain your reasoning, implementation choices, trade-offs, and evidence..."></textarea>
-              <div class="composer-bottom"><span>Be specific. The evaluator scores evidence, not length.</span><button class="primary-btn" type="submit">Submit answer <span>↵</span></button></div>
-            </form>
-            <div class="retry-wrap"><button id="retryBtn" class="retry hidden" type="button">Retry last request</button></div>
-          </section>
-        </section>
+    <section id="pricing" class="px-5 py-20 sm:px-8 lg:px-10">
+      <div class="mx-auto flex max-w-7xl flex-col items-start justify-between gap-8 rounded-3xl bg-[#ece8df] p-8 sm:p-12 lg:flex-row lg:items-center"><div><p class="text-xs font-bold tracking-[.18em] text-amber">START SIMPLE</p><h2 class="serif mt-3 text-4xl">One good interview is worth an hour of passive study.</h2><p class="mt-3 max-w-xl text-sm leading-6 text-ink/55">Use the current local-first experience for free, then connect your preferred deployment and model configuration when you're ready.</p></div><a href="/interview.html" class="shrink-0 rounded-full bg-ink px-7 py-3.5 text-sm font-bold text-paper transition hover:bg-ink/90">Try the interview →</a></div>
+    </section>
+  </main>
 
-        <section class="feedback hidden" id="feedback"></section>
-      </main>
+  <footer class="border-t border-ink/10 px-5 py-12 sm:px-8 lg:px-10">
+    <div class="mx-auto grid max-w-7xl gap-10 sm:grid-cols-2 lg:grid-cols-4">
+      <div><a href="#home" class="flex items-center gap-3 font-semibold"><span class="grid h-8 w-8 place-items-center rounded-lg bg-ink text-xs text-paper">IA</span> Interview Agent</a><p class="mt-4 max-w-xs text-xs leading-5 text-ink/45">Adaptive technical interview practice for people who want to know what they're actually ready for.</p></div>
+      <div><p class="text-xs font-bold">PRODUCT</p><div class="mt-4 space-y-2 text-sm text-ink/55"><a class="block hover:text-ink" href="#how-it-works">How It Works</a><a class="block hover:text-ink" href="#question-bank">Question Bank</a><a class="block hover:text-ink" href="#pricing">Pricing</a></div></div>
+      <div><p class="text-xs font-bold">RESOURCES</p><div class="mt-4 space-y-2 text-sm text-ink/55"><a class="block hover:text-ink" href="/interview.html">Practice Interview</a><a class="block hover:text-ink" href="/README.md">Documentation</a></div></div>
+      <div><p class="text-xs font-bold">GET STARTED</p><div class="mt-4 space-y-2 text-sm text-ink/55"><a class="block hover:text-ink" href="/interview.html">Start an assessment</a><a class="block hover:text-ink" href="#home">Back to top ↑</a></div></div>
     </div>
-    <script src="/app.js"></script>
-  </body>
+    <div class="mx-auto mt-12 max-w-7xl border-t border-ink/10 pt-6 text-xs text-ink/40">© 2026 Interview Agent. Built for practical technical interview preparation.</div>
+  </footer>
+</body>
 </html>
