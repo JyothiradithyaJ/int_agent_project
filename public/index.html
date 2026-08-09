@@ -3,48 +3,90 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Interview Agent</title>
+    <meta name="theme-color" content="#0b1220" />
+    <meta name="description" content="Adaptive AI technical interview platform" />
+    <title>Interview Agent · AI Technical Assessment</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
-    <main class="shell">
-      <section class="panel">
-        <header class="topbar">
+    <div class="app-shell">
+      <header class="app-header">
+        <div class="brand-block">
+          <div class="brand-mark">IA</div>
           <div>
+            <div class="eyebrow">AI ASSESSMENT PLATFORM</div>
             <h1>Interview Agent</h1>
-            <p>Personalized technical interview for AI Cohort graduates</p>
           </div>
-          <div class="header-status">
-            <div class="status" id="status">Ready</div>
-            <div class="ai-status" id="aiStatus">Checking AI...</div>
-          </div>
-        </header>
-
-        <div class="progress-wrap" aria-label="Curriculum day coverage">
-          <div class="progress" id="progress"></div>
         </div>
-        <div class="coverage" id="coverageText">0 / 31 curriculum days covered</div>
+        <div class="header-actions">
+          <span class="session-badge" id="status">Ready</span>
+          <span class="ai-status" id="aiStatus">Checking AI...</span>
+        </div>
+      </header>
 
-        <section class="setup" id="setup">
-          <label for="candidateSelect">Candidate profile</label>
-          <select id="candidateSelect"></select>
-          <button id="startBtn" type="button">Start Interview</button>
+      <main class="workspace">
+        <section class="hero" id="setup">
+          <div class="hero-copy">
+            <span class="eyebrow">ADAPTIVE TECHNICAL INTERVIEW</span>
+            <h2>Measure engineering judgment, not memorization.</h2>
+            <p>The interviewer adapts difficulty from your answers and evaluates technical depth, problem solving, production readiness, and communication.</p>
+          </div>
+          <div class="setup-card">
+            <label for="candidateSelect">Candidate profile</label>
+            <select id="candidateSelect"></select>
+            <div class="setup-meta">
+              <span>31-day curriculum</span><span>•</span><span>Adaptive questioning</span><span>•</span><span>Evidence-based score</span>
+            </div>
+            <button id="startBtn" class="primary-btn" type="button"><span>Start assessment</span><span>→</span></button>
+          </div>
         </section>
 
-        <section class="chat" id="chat" aria-live="polite"></section>
+        <section class="interview-layout">
+          <aside class="session-rail" aria-label="Interview progress">
+            <div class="rail-card timer-card">
+              <div class="rail-label">TIME REMAINING</div>
+              <div class="timer" id="timer">20:00</div>
+              <div class="timer-track"><div id="timerProgress"></div></div>
+              <div class="timer-state" id="timerState">Ready when you are</div>
+            </div>
+            <div class="rail-card">
+              <div class="rail-label">SESSION</div>
+              <div class="rail-stat"><strong id="questionCount">0</strong><span>questions</span></div>
+              <div class="rail-stat"><strong id="coveredCount">0/31</strong><span>curriculum</span></div>
+            </div>
+            <div class="rail-card">
+              <div class="rail-label">CURRENT LEVEL</div>
+              <div class="difficulty-badge foundation" id="difficulty">FOUNDATION</div>
+              <p id="difficultyHint">The interview starts with baseline understanding.</p>
+            </div>
+          </aside>
 
-        <form class="composer" id="composer">
-          <input id="messageInput" autocomplete="off" placeholder="Answer the interviewer..." />
-          <button type="submit">Send</button>
-        </form>
+          <section class="interview-panel">
+            <div class="interview-toolbar">
+              <div>
+                <div class="rail-label">LIVE INTERVIEW</div>
+                <div class="coverage-line"><div class="progress-wrap"><div class="progress" id="progress"></div></div><span id="coverageText">0 / 31 days</span></div>
+              </div>
+              <div class="live-dot"><span></span> LIVE</div>
+            </div>
 
-        <div class="retry-wrap">
-          <button id="retryBtn" class="retry hidden" type="button">Retry last request</button>
-        </div>
+            <section class="chat" id="chat" aria-live="polite"></section>
+
+            <form class="composer" id="composer">
+              <div class="composer-top"><span>YOUR RESPONSE</span><span id="responseTimer">01:30</span></div>
+              <textarea id="messageInput" rows="4" autocomplete="off" placeholder="Explain your reasoning, implementation choices, trade-offs, and evidence..."></textarea>
+              <div class="composer-bottom"><span>Be specific. The evaluator scores evidence, not length.</span><button class="primary-btn" type="submit">Submit answer <span>↵</span></button></div>
+            </form>
+            <div class="retry-wrap"><button id="retryBtn" class="retry hidden" type="button">Retry last request</button></div>
+          </section>
+        </section>
 
         <section class="feedback hidden" id="feedback"></section>
-      </section>
-    </main>
+      </main>
+    </div>
     <script src="/app.js"></script>
   </body>
 </html>
