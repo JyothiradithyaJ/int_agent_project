@@ -1,6 +1,6 @@
 # Interview Agent
 
-Groq-powered AI Interview Agent for the AI Cohort hackathon. It exposes the required `POST /api/interview` endpoint and serves a chat UI at `http://localhost:3000`.
+Groq-powered AI Interview Agent for the AI Cohort hackathon. It exposes `POST /api/interview` and serves a chat UI at `http://localhost:3000`.
 
 ## Setup
 
@@ -10,62 +10,76 @@ Install dependencies:
 npm.cmd install
 ```
 
-Set your Groq key in the same PowerShell window before starting:
-
-```powershell
-$env:GROQ_API_KEY="your-groq-api-key"
-npm.cmd start
-```
-
-Or create a `.env` file in the project root:
+Create `.env` from `.env.example` and add your Groq key:
 
 ```text
 GROQ_API_KEY=your-groq-api-key
 GROQ_MODEL=llama-3.3-70b-versatile
+USE_MOCK_LLM=0
+PORT=3000
+GROQ_TIMEOUT_MS=20000
 ```
 
-When Groq is active, startup should say:
+Never commit `.env` or your real API key.
+
+Start the application:
+
+```powershell
+npm.cmd start
+```
+
+Open:
 
 ```text
-Groq live: llama-3.3-70b-versatile
+http://localhost:3000
 ```
 
-You can also check:
+## Groq Diagnostics
+
+Check configuration:
 
 ```text
 http://localhost:3000/api/health
 ```
 
-Expected live response:
+Run the direct Groq test:
 
-```json
-{ "ok": true, "mode": "groq-live", "model": "llama-3.3-70b-versatile", "hasGroqKey": true, "forceMock": false }
+```powershell
+npm.cmd run test:groq
 ```
+
+The test checks the API key, selected model, HTTP response, JSON response, and request timeout.
+
+The browser also shows whether the server is configured for Groq Live or Local Mock Mode.
+
+### Common errors
+
+- `401`: check `GROQ_API_KEY`.
+- `403`: check API key permissions.
+- `429`: Groq rate limit reached; wait and retry.
+- `400`: check model/request configuration.
+- Timeout: check network connectivity or increase `GROQ_TIMEOUT_MS`.
+
+Groq errors are no longer silently converted into mock interview responses. Mock mode is only used when `USE_MOCK_LLM=1`.
 
 ## Mock Mode
 
-Mock mode is only used when:
-
-- `GROQ_API_KEY` is missing
-- `USE_MOCK_LLM=1`
-- Groq has an API/network/JSON error
-
-To force mock mode:
+Mock mode is intentionally deterministic for tests:
 
 ```powershell
 $env:USE_MOCK_LLM="1"
-npm.cmd start
+npm.cmd run test:simulate
 ```
 
-To turn mock mode off in the same terminal:
+For normal operation, use:
 
-```powershell
-Remove-Item Env:\USE_MOCK_LLM
+```text
+USE_MOCK_LLM=0
 ```
 
 ## API
 
-Start:
+Start a session:
 
 ```json
 { "sessionId": "abc-123", "candidate": { "...": "one candidate object" } }
@@ -77,29 +91,31 @@ Continue:
 { "sessionId": "abc-123", "message": "candidate answer" }
 ```
 
-Responses always match one of:
+Interview responses include `coverage`, `day_covered`, and `quality_signal` so the frontend does not need to infer curriculum progress from generated text.
 
-```json
-{ "reply": "string", "done": false }
-```
+Final feedback includes:
 
-```json
-{
-  "reply": "string",
-  "done": true,
-  "feedback": { "summary": "string", "strengths": [], "gaps": [], "next": [] }
-}
-```
+- summary
+- strengths
+- gaps
+- next steps
+- category scores
+- evidence tied to the transcript
 
-## Verify
+## Verification
 
 ```powershell
 npm.cmd run test:planner
 npm.cmd run test:simulate
+npm.cmd run test:groq
 ```
 
-The simulation uses local mode intentionally so tests do not spend Groq quota.
+The simulation uses local mode intentionally so tests do not spend Groq quota. The Groq test is the only test that calls the live API.
+
+## Project Improvements
+
+The interview agent now supports adaptive weak/partial/strong answer handling, stronger failed/skipped topic prioritization, topic diversity, session expiry, request validation, Groq timeouts, explicit AI status, retry behavior, 31-day curriculum progress, and evidence-based final scoring.
 
 ## Submission Note
 
-The hackathon also requires a root-level `PROMPTS.md` describing the prompts used while building. Fill that in manually as part of the submission record.
+The hackathon requires a root-level `PROMPTS.md` describing the prompts used while building. Fill that in manually as part of the submission record.
