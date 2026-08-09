@@ -3,10 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#080d12">
+  <meta name="theme-color" content="#f7f4ee">
   <meta name="description" content="Live adaptive AI technical interview workspace.">
-  <title>Interview Agent — Assessment</title>
+  <title>Interview Agent — Live Assessment</title>
   <link rel="stylesheet" href="/styles.css">
+  <style>
+    :root{color-scheme:light;--bg:#f7f4ee;--surface:#fff;--surface-2:#f1f0ea;--line:#1f24201a;--line-soft:#1f242012;--text:#1f2420;--muted:#1f24208c;--accent:#e8863a;--accent-strong:#d9782e;--blue:#55759b;--amber:#b87519;--danger:#c65353;--shadow:0 18px 50px rgba(31,36,32,.08)}
+    html{background:var(--bg)}body{background:#f7f4ee;color:var(--text)}
+    .app-header{background:rgba(247,244,238,.95);border-bottom-color:var(--line);box-shadow:0 1px 0 rgba(31,36,32,.04)}
+    .brand-mark{border-color:#1f24201a;background:#1f2420;color:#f7f4ee;text-decoration:none}.session-badge,.ai-status{background:#fff;border-color:var(--line);color:var(--muted)}
+    .ai-status.live{color:#50705a;border-color:#b8cbb9;background:#e8efe8}.ai-status.mock{color:#8b5c17;border-color:#e4c991;background:#fbf2dc}.ai-status.error{color:#a94444;border-color:#e3b2b2;background:#f9e8e8}
+    .workspace{width:min(1240px,calc(100% - 40px));padding:40px 0 60px}.hero{padding:12px 0 42px}.hero-copy h2{color:var(--text)}.hero-copy p{color:var(--muted)}
+    .setup-card,.rail-card,.interview-panel,.feedback{border-color:var(--line);background:#fff;box-shadow:var(--shadow)}.setup-card{background:#fff}.setup-card label,.rail-label,.eyebrow{color:var(--muted)}
+    select,textarea{background:#fbfaf7;color:var(--text);border-color:var(--line)}select:focus,textarea:focus{border-color:#e8863a;box-shadow:0 0 0 3px rgba(232,134,58,.10)}
+    .primary-btn{border-color:#e8863a;background:#e8863a;color:#fff}.primary-btn:hover:not(:disabled){background:#d9782e}
+    .interview-layout{grid-template-columns:220px minmax(0,1fr);min-height:680px}.timer-card{background:#eef1eb}.rail-card{background:#fff}.timer{color:var(--text)}.timer.warning{color:var(--amber)}.timer.danger{color:var(--danger)}
+    .timer-track,.progress-wrap,.score-track{background:#e5e6e0}.timer-track div,.progress,.score-fill{background:#e8863a}.timer-state,.rail-stat span,.rail-card p,.coverage-line>span,.live-dot,.composer-bottom,.feedback-summary,.overall-score span,.recommendation .confidence,.metric span,.evidence p{color:var(--muted)}
+    .difficulty-badge{border-color:var(--line)}.difficulty-badge.foundation{color:#55759b;background:#edf2f8}.difficulty-badge.intermediate{color:#9b681b;background:#fbf2dc}.difficulty-badge.advanced{color:#70558e;background:#f2ebf7}.difficulty-badge.production{color:#50705a;background:#e8efe8}
+    .interview-panel{background:#fff}.interview-toolbar{border-bottom-color:var(--line)}.chat{background:#fbfaf7}.bubble.interviewer{border-color:var(--line);background:#eef1eb;color:var(--text)}.bubble.interviewer::before{color:#50705a}.bubble.candidate{border-color:#1f24202b;background:#1f2420;color:#fff}
+    .composer{border-top-color:var(--line);background:#fff}.retry-wrap{background:#fff}.retry{border-color:#e3b2b2;background:#f9e8e8;color:#a94444}
+    .feedback{background:#fff}.feedback h3{color:var(--muted)}.recommendation .label{border-color:#b8cbb9;background:#e8efe8;color:#50705a}.metric{border-color:var(--line);background:#f5f3ed}.score-row,.chip,.check,.evidence{border-color:var(--line);background:#f7f6f1;color:#3d443e}.score-header strong{color:#d9782e}.evidence{border-left-color:#55759b}.evidence.strong{border-left-color:#50705a}.evidence.weak{border-left-color:#c65353}.evidence .assessment{color:var(--muted)}
+    @media(max-width:900px){.workspace{width:min(calc(100% - 28px),760px)}.interview-layout{grid-template-columns:1fr}}@media(max-width:640px){.workspace{width:calc(100% - 18px)}}
+  </style>
 </head>
 <body>
 <div class="app-shell">
@@ -14,20 +32,17 @@
     <div class="brand-block"><a href="/" class="brand-mark" aria-label="Interview Agent home">IA</a><div><div class="eyebrow">AI TECHNICAL ASSESSMENT</div><h1>Interview Agent</h1></div></div>
     <div class="header-actions"><span class="session-badge" id="status">Ready</span><span class="ai-status" id="aiStatus">Checking AI...</span></div>
   </header>
-
   <main class="workspace">
     <section class="hero" id="setup">
       <div class="hero-copy"><div class="eyebrow">ADAPTIVE MOCK INTERVIEW</div><h2>Show what you know under pressure.</h2><p>The interviewer starts from your learning history, adapts to your answers, and ends with a structured readiness report.</p></div>
       <div class="setup-card"><label for="candidateSelect">Candidate profile</label><select id="candidateSelect" aria-label="Candidate profile"></select><div class="setup-meta"><span>20 min</span><span>•</span><span>31-day curriculum</span><span>•</span><span>Adaptive AI</span></div><button id="startBtn" class="primary-btn" type="button"><span>Begin assessment</span><span>→</span></button></div>
     </section>
-
     <section class="interview-layout" aria-label="Interview workspace">
       <aside class="session-rail" aria-label="Assessment status">
         <div class="rail-card timer-card"><div class="rail-label">TIME REMAINING</div><div class="timer" id="timer">20:00</div><div class="timer-track"><div id="timerProgress"></div></div><div class="timer-state" id="timerState">Ready when you are</div></div>
         <div class="rail-card"><div class="rail-label">SESSION</div><div class="rail-stat"><strong id="questionCount">0</strong><span>questions</span></div><div class="rail-stat"><strong id="coveredCount">0/31</strong><span>days covered</span></div></div>
         <div class="rail-card"><div class="rail-label">CURRENT LEVEL</div><div class="difficulty-badge foundation" id="difficulty">FOUNDATION</div><p id="difficultyHint">Baseline understanding and implementation fundamentals.</p></div>
       </aside>
-
       <section class="interview-panel" aria-label="Live interview">
         <div class="interview-toolbar"><div><div class="rail-label">INTERVIEW PROGRESS</div><div class="coverage-line"><div class="progress-wrap"><div class="progress" id="progress"></div></div><span id="coverageText">0 / 31 days</span></div></div><div class="live-dot"><span></span> LIVE</div></div>
         <section class="chat" id="chat" aria-live="polite" aria-label="Interview conversation"></section>
